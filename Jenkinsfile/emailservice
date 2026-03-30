@@ -29,14 +29,24 @@ pipeline {
             steps {
                 dir('src/emailservice') {
                     sh '''
-                    python3 -m pip install --user --upgrade bandit
-                    bandit -r . -f json -o bandit-report.json || true
+                        echo " Running Bandit Security Scan..."
+
+                        # Create a virtual environment to avoid externally-managed-environment error
+                        python3 -m venv bandit-venv
+                        . bandit-venv/bin/activate
+
+                        # Install/upgrade pip and bandit inside the venv
+                        pip install --upgrade pip
+                        pip install bandit
+
+                        # Run the scan
+                        bandit -r . -f json -o bandit-report.json || true
                     '''
                 }
             }
             post {
                 always {
-                    archiveArtifacts 'src/emailservice/bandit-report.json'
+                    archiveArtifacts artifacts: 'src/emailservice/bandit-report.json', allowEmptyArchive: true
                 }
             }
         }
