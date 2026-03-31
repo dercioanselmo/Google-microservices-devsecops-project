@@ -82,7 +82,17 @@ pipeline {
         stage("Install Dependencies") {
             steps {
                 dir('src/emailservice') {
-                    sh 'python3 -m pip install --user -r requirements.txt || true'
+                    sh '''
+                        echo "Installing Python dependencies..."
+
+                        # Create virtual environment
+                        python3 -m venv venv
+                        . venv/bin/activate
+
+                        # Install dependencies
+                        pip install --upgrade pip
+                        pip install -r requirements.txt
+                    '''
                 }
             }
         }
@@ -92,14 +102,23 @@ pipeline {
             steps {
                 dir('src/emailservice') {
                     sh '''
-                    python3 -m pip install --user safety
-                    safety check --full-report --output json > safety-report.json || true
+                        echo "🔍 Running Safety Dependency Scan..."
+
+                        # Create virtual environment
+                        python3 -m venv safety-venv
+                        . safety-venv/bin/activate
+
+                        pip install --upgrade pip
+                        pip install safety
+
+                        echo "Running safety check..."
+                        safety check --full-report --output json > safety-report.json || true
                     '''
                 }
             }
             post {
                 always {
-                    archiveArtifacts 'src/emailservice/safety-report.json'
+                    archiveArtifacts artifacts: 'src/emailservice/safety-report.json', allowEmptyArchive: true
                 }
             }
         }
