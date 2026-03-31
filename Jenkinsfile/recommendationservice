@@ -29,8 +29,16 @@ pipeline {
             steps {
                 dir('src/recommendationservice') {
                     sh '''
-                    python3 -m pip install --user --upgrade bandit
-                    bandit -r . -f json -o bandit-report.json || true
+                        echo "Running Bandit scan..."
+
+                        # Use Python 3.10
+                        python3.10 -m venv bandit-venv
+                        . bandit-venv/bin/activate
+
+                        pip install --upgrade pip setuptools wheel
+                        pip install bandit
+
+                        bandit -r . -f json -o bandit-report.json || true
                     '''
                 }
             }
@@ -72,7 +80,15 @@ pipeline {
         stage("Install Dependencies") {
             steps {
                 dir('src/recommendationservice') {
-                    sh 'python3 -m pip install --user -r requirements.txt || true'
+                    sh '''
+                        echo "Installing dependencies..."
+
+                        python3.10 -m venv venv
+                        . venv/bin/activate
+
+                        pip install --upgrade pip setuptools wheel
+                        pip install -r requirements.txt
+                    '''
                 }
             }
         }
@@ -82,8 +98,15 @@ pipeline {
             steps {
                 dir('src/recommendationservice') {
                     sh '''
-                    python3 -m pip install --user safety
-                    safety check --full-report --output json > safety-report.json || true
+                        echo "Running Safety scan..."
+
+                        python3.10 -m venv safety-venv
+                        . safety-venv/bin/activate
+
+                        pip install --upgrade pip setuptools wheel
+                        pip install safety
+
+                        safety check --full-report --output json > safety-report.json || true
                     '''
                 }
             }
