@@ -250,7 +250,7 @@ docker run -d --name sonarqube \
   -v sonarqube_data:/opt/sonarqube/data \
   -v sonarqube_logs:/opt/sonarqube/logs \
   -v sonarqube_extensions:/opt/sonarqube/extensions \
-  sonarqube:25.9.0.112764-community
+  sonarqube:25.9.0.112764-community    --> The version is been updated to 26.3.0.120487. 
 ```
 
 ---
