@@ -32,7 +32,7 @@ pipeline {
                         echo " Running Bandit Security Scan..."
 
                         # Create a virtual environment to avoid externally-managed-environment error
-                        python3 -m venv bandit-venv
+                        python3.10 -m venv bandit-venv
                         . bandit-venv/bin/activate
 
                         # Install/upgrade pip and bandit inside the venv
@@ -105,7 +105,10 @@ pipeline {
                         echo "🔍 Running Safety Dependency Scan..."
 
                         # Create virtual environment
-                        python3 -m venv safety-venv
+                        #python3 -m venv safety-venv
+                            if [ ! -d safety-venv ]; then
+                                python3.10 -m venv safety-venv
+                            fi
                         . safety-venv/bin/activate
 
                         pip install --upgrade pip
