@@ -60,29 +60,26 @@ pipeline {
             }
         }
 
-        stage("OWASP FS Scan") {
+          stage("OWASP FS Scan") {
             steps {
                 dir('src/currencyservice') {
-                    // Optional: Purge only when needed (e.g., first time or weekly)
-                    // dependencyCheck additionalArguments: '--purge', odcInstallation: 'dp-check'
+                dependencyCheck additionalArguments: '''
+                    --scan ./ 
+                    --disableYarnAudit 
+                    --disableNodeAudit 
+                
+                   ''',
+                odcInstallation: 'dp-check'
 
-                    dependencyCheck additionalArguments: '''
-                        --scan ./
-                        --disableYarnAudit 
-                        --disableNodeAudit
-                        --nvdApiDelay 6000
-                        ''',
-                        odcInstallation: 'dp-check',
-                        nvdCredentialsId: 'nvd-api-key'
-                }
-            }
-            post {
-                always {
-                    archiveArtifacts 'src/currencyservice/dependency-check-report.xml'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                }
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
+                    post {
+                always {
+                    archiveArtifacts 'src/currencyservice/dependency-check-report.xml'
+                }
+            }
+          }
 
         // --- Trivy FS Scan ---
         stage("Trivy File Scan") {
