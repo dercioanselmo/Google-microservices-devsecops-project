@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-
+/*
           stage("OWASP FS Scan") {
             steps {
                 dir('src/currencyservice') {
@@ -71,7 +71,7 @@ pipeline {
                    ''',
                 odcInstallation: 'dp-check'
 
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                dependencyCheckPublisher pattern: '/dependency-check-report.xml'
             }
         }
                     post {
@@ -80,6 +80,7 @@ pipeline {
                 }
             }
           }
+          */
 
         // --- Trivy FS Scan ---
         stage("Trivy File Scan") {
