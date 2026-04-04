@@ -63,24 +63,23 @@ pipeline {
         stage("OWASP FS Scan") {
             steps {
                 dir('src/currencyservice') {
-                    // Purge corrupted DB first
-                    dependencyCheck additionalArguments: '--purge', 
-                                    odcInstallation: 'dp-check'
+                    // Optional: Purge only when needed (e.g., first time or weekly)
+                    // dependencyCheck additionalArguments: '--purge', odcInstallation: 'dp-check'
 
-                    // The actual scan
                     dependencyCheck additionalArguments: '''
                         --scan ./
                         --disableYarnAudit 
                         --disableNodeAudit
+                        --nvdApiDelay 6000
                         ''',
-                        odcInstallation: 'dp-check'
-
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                        odcInstallation: 'dp-check',
+                        nvdCredentialsId: 'nvd-api-key'
                 }
             }
             post {
                 always {
                     archiveArtifacts 'src/currencyservice/dependency-check-report.xml'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
             }
         }
