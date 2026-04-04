@@ -246,6 +246,7 @@ sudo apt install -y python3.10 python3.10-venv python3.10-distutils python3.10-d
 
 ```bash
 docker run -d --name sonarqube \
+  --restart unless-stopped \
   -p 9000:9000 \
   -v sonarqube_data:/opt/sonarqube/data \
   -v sonarqube_logs:/opt/sonarqube/logs \
