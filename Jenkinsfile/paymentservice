@@ -67,6 +67,7 @@ pipeline {
                     --scan ./ 
                     --disableYarnAudit 
                     --disableNodeAudit 
+                    --cveValidForHours 24
                 
                    ''',
                 odcInstallation: 'dp-check'
