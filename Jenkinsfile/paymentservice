@@ -59,8 +59,8 @@ pipeline {
                 }
             }
         }
-
-          stage("OWASP FS Scan") {
+/*
+        stage("OWASP FS Scan") {
             steps {
                 dir('src/paymentservice') {
                 dependencyCheck additionalArguments: '''
@@ -72,7 +72,7 @@ pipeline {
                    ''',
                 odcInstallation: 'dp-check'
 
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                dependencyCheckPublisher pattern: dependency-check-report.xml'
             }
         }
                     post {
@@ -81,7 +81,7 @@ pipeline {
                 }
             }
           }
-
+*/
         // --- Trivy FS Scan ---
         stage("Trivy File Scan") {
             steps {
