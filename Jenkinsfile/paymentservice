@@ -67,7 +67,7 @@ pipeline {
                     --scan ./ 
                     --disableYarnAudit 
                     --disableNodeAudit 
-                    --cveValidForHours 24
+                    --nvdDisableAutoUpdate
                 
                    ''',
                 odcInstallation: 'dp-check'
